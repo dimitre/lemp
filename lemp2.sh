@@ -1,6 +1,6 @@
 ## Abrindo a porta 80
 
-echo "\e[92mBeginning Script in date time : $(date)"
+echo -e "\e[92mBeginning Script in date time : $(date)"
 
 sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
 sudo firewall-cmd --reload 
@@ -31,4 +31,4 @@ service mariadb start
 service php-fpm start
 service nginx start
 
-echo "\e[92mEnding Script in date time : $(date)"
+echo -e "\e[92mEnding Script in date time : $(date)"
