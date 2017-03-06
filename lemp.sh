@@ -9,7 +9,7 @@ sudo systemctl enable nginx
 service nginx start
 
 # instalando PHP
-yum install epel-release -y
+# yum install epel-release -y
 rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
@@ -26,4 +26,8 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF
 
-yum install MariaDB-server
+yum install MariaDB-server -y
+yum remove mysql-community-release-el7-5.noarch
+sudo yum install MariaDB-server MariaDB-client -y
+sudo systemctl enable mariadb 
+service mariadb start
