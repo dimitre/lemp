@@ -1,6 +1,6 @@
 ## Abrindo a porta 80
 
-echo -e "\e[92mBeginning Script in date time : $(date)"
+echo -e "\e[92mBeginning Script in date time : $(date)\e[0m"
 
 sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
 sudo firewall-cmd --reload 
@@ -33,7 +33,9 @@ yum update -y
 yum install -y lynx git
 yum --enablerepo=nginx -y install nginx
 yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
-yum install -y php71w-fpm.x86_64 php71w-mysql.x86_64 php71w-gd.x86_64 MariaDB-server MariaDB-client
+yum --enablerepo=remi-php72 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
+
+#yum install -y php71w-fpm.x86_64 php71w-mysql.x86_64 php71w-gd.x86_64 MariaDB-server MariaDB-client
 sudo systemctl enable nginx
 sudo systemctl enable php-fpm
 sudo systemctl enable mariadb 
@@ -42,4 +44,4 @@ service mariadb start
 service php-fpm start
 service nginx start
 
-echo -e "\e[92mEnding Script in date time : $(date)"
+echo -e "\e[92mEnding Script in date time : $(date)\e[0m"
