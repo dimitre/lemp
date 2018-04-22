@@ -23,7 +23,7 @@ EOF
 cat >/etc/yum.repos.d/nginx.repo <<EOF
 [nginx]
 name=nginx repo
-baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/
 gpgcheck=0
 enabled=1
 EOF
@@ -31,6 +31,7 @@ EOF
 # instalando NGINX
 yum update -y
 yum install -y lynx git
+#yum --disablerepo "*" --enablerepo=nginx -y install nginx
 yum --enablerepo=nginx -y install nginx
 yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
 yum --enablerepo=remi-php72 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
