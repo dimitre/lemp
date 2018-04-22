@@ -1,6 +1,7 @@
 ## Abrindo a porta 80
 
 #echo -e "\e[92mBeginning Script in date time : $(date)\e[0m"
+#http://jafrog.com/2013/11/23/colors-in-terminal.html
 echo -e "\e[33;3mBeginning Script in date time : $(date)\e[0m"
 
 sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
@@ -36,6 +37,38 @@ yum install -y lynx git
 yum --enablerepo=nginx -y install nginx
 yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
 yum --enablerepo=remi-php72 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
+
+cat >/etc/nginx/conf.d/dimitre.conf <<EOF
+    server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+
+		index index.php index.html index.htm;
+		location ~ .php$ {
+        	try_files $uri =404;
+        	fastcgi_pass 127.0.0.1:9000;
+        	fastcgi_index index.php;
+        	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        	include fastcgi_params;
+		}
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        location / {
+        }
+
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+EOF
+
 
 #yum install -y php71w-fpm.x86_64 php71w-mysql.x86_64 php71w-gd.x86_64 MariaDB-server MariaDB-client
 sudo systemctl enable nginx
