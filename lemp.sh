@@ -17,10 +17,11 @@ rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
 cat >/etc/yum.repos.d/MariaDB.repo <<EOF
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.2/centos$releasever-amd64
+baseurl = http://yum.mariadb.org/10.2/centos\$releasever-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF
+
 
 cat >/etc/yum.repos.d/nginx.repo <<EOF
 [nginx]
@@ -31,7 +32,7 @@ enabled=1
 EOF
 
 # instalando NGINX
-yum update -y
+#yum update -y
 yum install -y lynx git
 #yum --disablerepo "*" --enablerepo=nginx -y install nginx
 yum --enablerepo=nginx -y install nginx
