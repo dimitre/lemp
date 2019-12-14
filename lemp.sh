@@ -17,7 +17,7 @@ rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
 cat >/etc/yum.repos.d/MariaDB.repo <<EOF
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.3/centos\$releasever-amd64
+baseurl = http://yum.mariadb.org/10.4/centos\$releasever-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF
@@ -37,7 +37,7 @@ yum install -y lynx git
 #yum --disablerepo "*" --enablerepo=nginx -y install nginx
 yum --enablerepo=nginx -y install nginx
 yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
-yum --enablerepo=remi-php73 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
+yum --enablerepo=remi-php74 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
 
 cat >/etc/nginx/conf.d/dimitre.conf <<'EOF'
     server {
