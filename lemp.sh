@@ -39,35 +39,65 @@ yum --enablerepo=nginx -y install nginx
 yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
 yum --enablerepo=remi-php74 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
 
-cat >/etc/nginx/conf.d/dimitre.conf <<'EOF'
-    server {
-        listen       80 default_server;
-        listen       [::]:80 default_server;
-        server_name  _;
-        root         /usr/share/nginx/html;
+cat >/etc/nginx/conf.d/neueserver.conf <<'EOF'
+
+	server {
+		listen			80 default_server;
+		listen			[::]:80 default_server;
+		server_name		espiral.xyz;
+		root 			/usr/share/nginx/html/cats1;
 
 		index index.php index.html index.htm;
 		location ~ .php$ {
-        	try_files $uri =404;
-        	fastcgi_pass 127.0.0.1:9000;
-        	fastcgi_index index.php;
-        	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        	include fastcgi_params;
+			try_files $uri =404;
+			fastcgi_pass 127.0.0.1:9000;
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include fastcgi_params;
 		}
-        # Load configuration files for the default server block.
-        include /etc/nginx/default.d/*.conf;
+		# Load configuration files for the default server block.
+		include /etc/nginx/default.d/*.conf;
 
-        location / {
-        }
+		location / {
+		}
 
-        error_page 404 /404.html;
-            location = /40x.html {
-        }
+		error_page 404 /404.html;
+			location = /40x.html {
+		}
 
-        error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
-        }
-    }
+		error_page 500 502 503 504 /50x.html;
+			location = /50x.html {
+		}
+	}
+
+	server {
+		listen			80 default_server;
+		listen			80[::]:80 default_server;
+		server_name		_;
+		root			/usr/share/nginx/html;
+
+		index index.php index.html index.htm;
+		location ~ .php$ {
+			try_files $uri =404;
+			fastcgi_pass 127.0.0.1:9000;
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include fastcgi_params;
+		}
+		# Load configuration files for the default server block.
+		include /etc/nginx/default.d/*.conf;
+
+		location / {
+		}
+
+		error_page 404 /404.html;
+			location = /40x.html {
+		}
+
+		error_page 500 502 503 504 /50x.html;
+			location = /50x.html {
+		}
+	}
 EOF
 
 
