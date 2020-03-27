@@ -1,3 +1,5 @@
+#!/bin/sh
+
 ## Abrindo a porta 80
 
 #echo -e "\e[92mBeginning Script in date time : $(date)\e[0m"
