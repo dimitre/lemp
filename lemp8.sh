@@ -40,8 +40,9 @@ wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
 chmod +x mariadb_repo_setup
 ./mariadb_repo_setup
 dnf install perl-DBI libaio libsepol lsof boost-program-options -y
-dnf install --repo="mariadb-main" MariaDB-server -y
-dnf install MariaDB-server --disablerepo=AppStream --enablerepo=mariadb
+#dnf install --repo="mariadb-main" MariaDB-server -y
+#dnf install MariaDB-server --disablerepo=AppStream --enablerepo=mariadb-main
+dnf install MariaDB-server --enablerepo=mariadb-main
 
 systemctl start mariadb
 systemctl enable mariadb
@@ -64,12 +65,12 @@ systemctl enable php-fpm
 systemctl status php-fpm
 
 
-cat >/etc/nginx/conf.d/neueserver.conf <<'EOF'
+cat >/etc/nginx/conf.d/neueserver.conf <<-'EOF'
 	server {
 		listen			80 default_server;
 		#listen			[::]:80 default_server;
 		server_name		espiral.xyz;
-		root 			/usr/share/nginx/html/cats1;
+		root			/usr/share/nginx/html/cats1;
 
 		index index.php index.html index.htm;
 		location ~ .php$ {
@@ -95,7 +96,7 @@ cat >/etc/nginx/conf.d/neueserver.conf <<'EOF'
 	}
 
 	server {
-		listen			80 default_server;
+		listen			80;
 		#listen			80[::]:80 default_server;
 		server_name		_;
 		root			/usr/share/nginx/html;
