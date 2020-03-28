@@ -1,9 +1,13 @@
 #!/bin/sh
 # necessario pra atualizar o PHP mais recente sem ser o 7.2 do appstream
+
+# git clone https://github.com/dimitre/lemp.git
+
 echo -e "\e[32;3mBeginning Script in date time : $(date)\e[0m"
-echo -e "\e[31;3mNGINX\e[0m"
+echo -e "\e[32;3mNGINX\e[0m"
 
 dnf update -y
+dnf install git -y
 
 # NGINX SESSION
 cat >/etc/yum.repos.d/nginx.repo <<EOF
@@ -37,7 +41,7 @@ chown nginx:nginx /usr/share/nginx/html -R
 
 
 # MARIADB
-echo -e "\e[31;3mMARIADB\e[0m"
+echo -e "\e[32;3mMARIADB\e[0m"
 wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
 chmod +x mariadb_repo_setup
 ./mariadb_repo_setup
@@ -52,7 +56,7 @@ systemctl status mariadb
 #mysql_secure_installation
 
 # PHP
-echo -e "\e[31;3mPHP\e[0m"
+echo -e "\e[32;3mPHP\e[0m"
 
 sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 #dnf module list php
@@ -86,65 +90,65 @@ EOF
 
 tail /usr/share/nginx/html/index.php
 
-cat >/etc/nginx/conf.d/neueserver.conf <<EOF
-	server {
-		listen			80 default_server;
-		#listen			[::]:80 default_server;
-		server_name		espiral.xyz;
-		root			/usr/share/nginx/html/;
+cat >/etc/nginx/conf.d/neueserver.conf <<'EOF'
+server {
+	listen			80 default_server;
+	#listen			[::]:80 default_server;
+	server_name		espiral.xyz;
+	root			/usr/share/nginx/html/;
 
-		index index.php index.html index.htm;
-		location ~ .php$ {
-			try_files $uri =404;
-			#fastcgi_pass 127.0.0.1:9000;
-			fastcgi_pass unix:/run/php-fpm/www.sock;
-			fastcgi_index index.php;
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			include fastcgi_params;
-		}
-		# Load configuration files for the default server block.
-		include /etc/nginx/default.d/*.conf;
+	index index.php index.html index.htm;
+	location ~ .php$ {
+		try_files $uri =404;
+		#fastcgi_pass 127.0.0.1:9000;
+		fastcgi_pass unix:/run/php-fpm/www.sock;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include fastcgi_params;
+	}
+	# Load configuration files for the default server block.
+	include /etc/nginx/default.d/*.conf;
 
-		location / {
-		}
-
-		error_page 404 /404.html;
-			location = /40x.html {
-		}
-
-		error_page 500 502 503 504 /50x.html;
-			location = /50x.html {
-		}
+	location / {
 	}
 
-	server {
-		listen			80;
-		#listen			80[::]:80 default_server;
-		server_name		_;
-		root			/usr/share/nginx/html;
-
-		index index.php index.html index.htm;
-		location ~ .php$ {
-			try_files $uri =404;
-			fastcgi_pass 127.0.0.1:9000;
-			fastcgi_index index.php;
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			include fastcgi_params;
-		}
-		# Load configuration files for the default server block.
-		include /etc/nginx/default.d/*.conf;
-
-		location / {
-		}
-
-		error_page 404 /404.html;
-			location = /40x.html {
-		}
-
-		error_page 500 502 503 504 /50x.html;
-			location = /50x.html {
-		}
+	error_page 404 /404.html;
+		location = /40x.html {
 	}
+
+	error_page 500 502 503 504 /50x.html;
+		location = /50x.html {
+	}
+}
+
+server {
+	listen			80;
+	#listen			80[::]:80 default_server;
+	server_name		_;
+	root			/usr/share/nginx/html;
+
+	index index.php index.html index.htm;
+	location ~ .php$ {
+		try_files $uri =404;
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include fastcgi_params;
+	}
+	# Load configuration files for the default server block.
+	include /etc/nginx/default.d/*.conf;
+
+	location / {
+	}
+
+	error_page 404 /404.html;
+		location = /40x.html {
+	}
+
+	error_page 500 502 503 504 /50x.html;
+		location = /50x.html {
+	}
+}
 EOF
 
 nginx -t
