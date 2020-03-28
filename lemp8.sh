@@ -3,6 +3,8 @@
 echo -e "\e[32;3mBeginning Script in date time : $(date)\e[0m"
 echo -e "\e[31;3mNGINX\e[0m"
 
+dnf update -y
+
 # NGINX SESSION
 cat >/etc/yum.repos.d/nginx.repo <<EOF
 [nginx-stable]
@@ -24,7 +26,7 @@ EOF
 
 dnf install nginx -y 
 
-systemctl start nginx
+systemctl restart nginx
 systemctl enable nginx
 systemctl status nginx
 
@@ -52,30 +54,50 @@ systemctl status mariadb
 # PHP
 echo -e "\e[31;3mPHP\e[0m"
 
-
-
-sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 #dnf module list php
-dnf module reset php
-dnf module enable php:remi-7.4
+dnf module reset php -y
+dnf module enable php:remi-7.4 -y
+dnf update -y
 
-sudo dnf install php php-opcache php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring -y
+dnf install php php-opcache php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring -y
 systemctl start php-fpm
 systemctl enable php-fpm
 systemctl status php-fpm
 
 
-cat >/etc/nginx/conf.d/neueserver.conf <<-'EOF'
+#nano /etc/nginx/conf.d/neueserver.conf
+
+#cat << EOF > temptest.txt
+#normal
+	#indent
+	#	two indent
+#EOF
+#tail temptest.txt
+#rm -rf temptest.txt
+
+
+
+cat << EOF > /usr/share/nginx/html/index.php
+<?php
+	phpinfo();
+?>
+EOF
+
+tail /usr/share/nginx/html/index.php
+
+cat >/etc/nginx/conf.d/neueserver.conf <<EOF
 	server {
 		listen			80 default_server;
 		#listen			[::]:80 default_server;
 		server_name		espiral.xyz;
-		root			/usr/share/nginx/html/cats1;
+		root			/usr/share/nginx/html/;
 
 		index index.php index.html index.htm;
 		location ~ .php$ {
 			try_files $uri =404;
-			fastcgi_pass 127.0.0.1:9000;
+			#fastcgi_pass 127.0.0.1:9000;
+			fastcgi_pass unix:/run/php-fpm/www.sock;
 			fastcgi_index index.php;
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			include fastcgi_params;
@@ -124,5 +146,8 @@ cat >/etc/nginx/conf.d/neueserver.conf <<-'EOF'
 		}
 	}
 EOF
+
+nginx -t
+
 
 echo -e "\e[33;3mEnding Script in date time : $(date)\e[0m"
