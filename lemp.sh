@@ -35,10 +35,12 @@ EOF
 
 # instalando NGINX
 #yum update -y
-yum install -y lynx git
+# yum install -y lynx git
+
 #yum --disablerepo "*" --enablerepo=nginx -y install nginx
 yum --enablerepo=nginx -y install nginx
-yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
+#yum --enablerepo=mariadb -y install MariaDB-server MariaDB-client
+yum --enablerepo=mariadb -y install mariadb-server MariaDB-client
 yum --enablerepo=remi-php74 -y install php-common php-fpm php-gd php-mysqlnd php-pdo php-pecl-jsonc php-pecl-zip php-xml php-fpm
 
 cat >/etc/nginx/conf.d/neueserver.conf <<'EOF'
