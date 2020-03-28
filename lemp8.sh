@@ -1,13 +1,16 @@
 #!/bin/sh
 # necessario pra atualizar o PHP mais recente sem ser o 7.2 do appstream
 
-# git clone https://github.com/dimitre/lemp.git
 
 echo -e "\e[32;3mBeginning Script in date time : $(date)\e[0m"
 echo -e "\e[32;3mNGINX\e[0m"
 
 dnf update -y
 dnf install git -y
+#
+#git clone https://github.com/dimitre/lemp.git
+#cd lemp
+#./lemp8.sh
 
 # NGINX SESSION
 cat >/etc/yum.repos.d/nginx.repo <<EOF
@@ -120,13 +123,15 @@ systemctl status mariadb
 # PHP
 echo -e "\e[32;3mPHP\e[0m"
 
-sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-#dnf module list php
+dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 dnf module reset php -y
-dnf module enable php:remi-7.4 -y
 dnf update -y
+dnf module enable php:remi-7.4 -y
+dnf module list php
 
 dnf install php php-opcache php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring -y
+
+#dnf remove php php-opcache php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring -y
 
 cat << EOF > /usr/share/nginx/html/index.php
 <?php
