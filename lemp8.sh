@@ -5,12 +5,21 @@
 echo -e "\e[32;3mBeginning Script in date time : $(date)\e[0m"
 echo -e "\e[32;3mNGINX\e[0m"
 
+# new key on my computer
+# sed -i '' -e '$ d' ~/.ssh/known_hosts
+
 dnf update -y
 dnf install git -y
 #
-#git clone https://github.com/dimitre/lemp.git
-#cd lemp
-#./lemp8.sh
+: '
+git clone https://github.com/dimitre/lemp.git
+cd lemp
+./lemp8.sh
+'
+
+#
+#
+#
 
 # NGINX SESSION
 cat >/etc/yum.repos.d/nginx.repo <<EOF
@@ -107,7 +116,7 @@ chown nginx:nginx /usr/share/nginx/html -R
 
 # MARIADB
 echo -e "\e[32;3mMARIADB\e[0m"
-wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+curl -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
 chmod +x mariadb_repo_setup
 ./mariadb_repo_setup
 dnf install perl-DBI libaio libsepol lsof boost-program-options -y
