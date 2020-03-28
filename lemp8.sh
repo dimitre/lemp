@@ -30,66 +30,6 @@ EOF
 
 dnf install nginx -y 
 
-systemctl restart nginx
-systemctl enable nginx
-systemctl status nginx
-
-firewall-cmd --permanent --zone=public --add-service=http
-firewall-cmd --permanent --zone=public --add-service=https
-systemctl reload firewalld
-chown nginx:nginx /usr/share/nginx/html -R
-
-
-# MARIADB
-echo -e "\e[32;3mMARIADB\e[0m"
-wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
-chmod +x mariadb_repo_setup
-./mariadb_repo_setup
-dnf install perl-DBI libaio libsepol lsof boost-program-options -y
-#dnf install --repo="mariadb-main" MariaDB-server -y
-#dnf install MariaDB-server --disablerepo=AppStream --enablerepo=mariadb-main
-dnf install MariaDB-server --enablerepo=mariadb-main
-
-systemctl start mariadb
-systemctl enable mariadb
-systemctl status mariadb
-#mysql_secure_installation
-
-# PHP
-echo -e "\e[32;3mPHP\e[0m"
-
-sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-#dnf module list php
-dnf module reset php -y
-dnf module enable php:remi-7.4 -y
-dnf update -y
-
-dnf install php php-opcache php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring -y
-systemctl start php-fpm
-systemctl enable php-fpm
-systemctl status php-fpm
-
-
-#nano /etc/nginx/conf.d/neueserver.conf
-
-#cat << EOF > temptest.txt
-#normal
-	#indent
-	#	two indent
-#EOF
-#tail temptest.txt
-#rm -rf temptest.txt
-
-
-
-cat << EOF > /usr/share/nginx/html/index.php
-<?php
-	phpinfo();
-?>
-EOF
-
-tail /usr/share/nginx/html/index.php
-
 cat >/etc/nginx/conf.d/neueserver.conf <<'EOF'
 server {
 	listen			80 default_server;
@@ -151,7 +91,66 @@ server {
 }
 EOF
 
-nginx -t
+
+systemctl restart nginx
+systemctl enable nginx
+systemctl status nginx
+
+firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --permanent --zone=public --add-service=https
+systemctl reload firewalld
+chown nginx:nginx /usr/share/nginx/html -R
+
+
+# MARIADB
+echo -e "\e[32;3mMARIADB\e[0m"
+wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+chmod +x mariadb_repo_setup
+./mariadb_repo_setup
+dnf install perl-DBI libaio libsepol lsof boost-program-options -y
+#dnf install --repo="mariadb-main" MariaDB-server -y
+#dnf install MariaDB-server --disablerepo=AppStream --enablerepo=mariadb-main
+dnf install MariaDB-server --enablerepo=mariadb-main
+
+systemctl start mariadb
+systemctl enable mariadb
+systemctl status mariadb
+#mysql_secure_installation
+
+# PHP
+echo -e "\e[32;3mPHP\e[0m"
+
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+#dnf module list php
+dnf module reset php -y
+dnf module enable php:remi-7.4 -y
+dnf update -y
+
+dnf install php php-opcache php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring -y
+
+cat << EOF > /usr/share/nginx/html/index.php
+<?php
+	phpinfo();
+?>
+EOF
+
+systemctl start php-fpm
+systemctl enable php-fpm
+systemctl status php-fpm
+
+
+#nano /etc/nginx/conf.d/neueserver.conf
+
+#cat << EOF > temptest.txt
+#normal
+	#indent
+	#	two indent
+#EOF
+#tail temptest.txt
+#rm -rf temptest.txt
+
+#tail /usr/share/nginx/html/index.php
+#nginx -t
 
 
 echo -e "\e[33;3mEnding Script in date time : $(date)\e[0m"
